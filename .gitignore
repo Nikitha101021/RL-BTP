@@ -1,0 +1,11 @@
+venv/
+__pycache__/
+*.pyc
+checkpoints/
+checkpoints_multicar/
+graphs/
+videos/
+runs/
+logs/
+*.zip
+.vscode/
