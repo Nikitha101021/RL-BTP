@@ -1,5 +1,8 @@
 import os
 
+import matplotlib
+
+matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 from stable_baselines3.common.callbacks import BaseCallback, CallbackList, CheckpointCallback
 
@@ -32,16 +35,19 @@ class GraphCheckpointCallback(BaseCallback):
         os.makedirs(GRAPHS_DIR, exist_ok=True)
         graph_path = os.path.join(GRAPHS_DIR, f"reward_graph_{self.num_timesteps}.png")
 
-        plt.figure(figsize=(10, 5))
-        plt.plot(self.timesteps, self.rewards)
-        plt.xlabel("Timesteps")
-        plt.ylabel("Episode Reward")
-        plt.title(f"Autonomous Driving PPO Learning Curve at {self.num_timesteps}")
-        plt.grid(True)
-        plt.savefig(graph_path)
-        plt.close()
-
-        print(f"[INFO] Reward graph saved: {graph_path}")
+        try:
+            plt.figure(figsize=(10, 5))
+            plt.plot(self.timesteps, self.rewards)
+            plt.xlabel("Timesteps")
+            plt.ylabel("Episode Reward")
+            plt.title(f"Autonomous Driving PPO Learning Curve at {self.num_timesteps}")
+            plt.grid(True)
+            plt.savefig(graph_path)
+            plt.close()
+            print(f"[INFO] Reward graph saved: {graph_path}")
+        except Exception as exc:
+            plt.close("all")
+            print(f"[WARN] Reward graph generation failed; training will continue: {exc}")
 
 
 def get_callbacks(checkpoint_dir, save_freq, graph_save_freq, model_prefix):

@@ -116,8 +116,6 @@ def train(quick_test=False):
         if quick_test
         else TRAINING_CONFIG.get("total_timesteps", 300000)
     )
-    target_timesteps = model.num_timesteps + requested_timesteps
-
     try:
         print(f"[INFO] Training on {hyperparams['device']} with {num_envs} env(s).")
         print(
@@ -125,7 +123,7 @@ def train(quick_test=False):
             f"Adding {requested_timesteps} timestep(s)."
         )
         model.learn(
-            total_timesteps=target_timesteps,
+            total_timesteps=requested_timesteps,
             callback=callbacks,
             reset_num_timesteps=False,
             log_interval=TRAINING_CONFIG.get("log_interval", 10),
