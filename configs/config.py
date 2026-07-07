@@ -9,7 +9,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 CHECKPOINTS_DIR = os.path.join(BASE_DIR, "checkpoints")
 MODELS_DIR = os.path.join(BASE_DIR, "models")
 OUTPUTS_DIR = os.path.join(BASE_DIR, "outputs")
-GRAPHS_DIR = os.path.join(BASE_DIR, "evaluation", "graphs")
+GRAPHS_DIR = os.path.join(OUTPUTS_DIR, "graphs")
 LOGS_DIR = os.path.join(OUTPUTS_DIR, "logs")
 VIDEOS_DIR = os.path.join(OUTPUTS_DIR, "videos")
 SCREENSHOTS_DIR = os.path.join(OUTPUTS_DIR, "screenshots")
@@ -79,7 +79,10 @@ TRAINING_CONFIG = {
 
     # Saving/logging
     "save_freq": 50_000,
-    "graph_save_freq": 25_000,
+    "graph_save_freq": 20_000,
+    "media_save_freq": 20_000,
+    "video_clip_frames": 300,
+    "video_fps": 30,
     "log_interval": 10,
     "tensorboard_log": LOGS_DIR,
 }
