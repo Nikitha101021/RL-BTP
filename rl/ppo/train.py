@@ -74,7 +74,11 @@ def make_env(env_id="CarRacing-v3", seed=42, rank=0):
 
 def train(quick_test=False):
     num_agents = ENV_CONFIG.get("num_agents", 1)
-    num_envs = TRAINING_CONFIG.get("num_envs", num_agents)
+    num_envs = (
+        TRAINING_CONFIG.get("quick_test_num_envs", 1)
+        if quick_test
+        else TRAINING_CONFIG.get("num_envs", num_agents)
+    )
     model_name_prefix = TRAINING_CONFIG.get("model_name_prefix", "ppo_autonomous_driving")
     model_name = f"{model_name_prefix}_{num_agents}_agent"
     if quick_test:
@@ -107,16 +111,21 @@ def train(quick_test=False):
         model_prefix=model_name,
     )
 
-    total_timesteps = (
+    requested_timesteps = (
         TRAINING_CONFIG.get("quick_test_timesteps", 1000)
         if quick_test
         else TRAINING_CONFIG.get("total_timesteps", 300000)
     )
+    target_timesteps = model.num_timesteps + requested_timesteps
 
     try:
         print(f"[INFO] Training on {hyperparams['device']} with {num_envs} env(s).")
+        print(
+            f"[INFO] Current model timesteps: {model.num_timesteps}. "
+            f"Adding {requested_timesteps} timestep(s)."
+        )
         model.learn(
-            total_timesteps=total_timesteps,
+            total_timesteps=target_timesteps,
             callback=callbacks,
             reset_num_timesteps=False,
             log_interval=TRAINING_CONFIG.get("log_interval", 10),

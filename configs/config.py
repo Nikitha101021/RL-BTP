@@ -58,6 +58,7 @@ TRAINING_CONFIG = {
 
     # Parallel environments
     "num_envs": 8,
+    "quick_test_num_envs": 1,
 
     # PPO hyperparameters
     "learning_rate": 5e-5,
