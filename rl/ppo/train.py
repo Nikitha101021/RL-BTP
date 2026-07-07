@@ -8,6 +8,7 @@ from stable_baselines3.common.vec_env import DummyVecEnv, VecMonitor, VecTranspo
 from configs.config import CHECKPOINTS_DIR, ENV_CONFIG, MODELS_DIR, TRAINING_CONFIG
 from configs.hyperparameters import PPO_HYPERPARAMS
 from rl.callbacks.callbacks import get_callbacks
+from rl.environments.weather_env import WeatherFrictionWrapper
 from rl.ppo.model import load_or_create_model
 
 try:
@@ -67,6 +68,7 @@ def make_env(env_id="CarRacing-v3", seed=42, rank=0):
             continuous=ENV_CONFIG.get("continuous", True),
         )
         env = FixedTrackWrapper(env, seed=seed + rank)
+        env = WeatherFrictionWrapper(env)
         return env
 
     return _init

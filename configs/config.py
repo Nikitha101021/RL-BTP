@@ -60,6 +60,11 @@ TRAINING_CONFIG = {
     "num_envs": 8,
     "quick_test_num_envs": 1,
 
+    # Weather and road friction
+    "weather_mode": "monsoon",
+    "slick_tile_probability": 0.35,
+    "slick_friction_value": 0.15,
+
     # PPO hyperparameters
     "learning_rate": 5e-5,
     "n_steps": 2048,
