@@ -83,6 +83,10 @@ TRAINING_CONFIG = {
     "media_save_freq": 20_000,
     "video_clip_frames": 300,
     "video_fps": 30,
+    "media_width": 1920,
+    "media_height": 1080,
+    "render_width": 1000,
+    "render_height": 800,
     "log_interval": 10,
     "tensorboard_log": LOGS_DIR,
 }

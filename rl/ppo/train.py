@@ -60,8 +60,20 @@ def get_training_hyperparams():
     return hyperparams
 
 
+def configure_carracing_render_size():
+    try:
+        import gymnasium.envs.box2d.car_racing as car_racing
+    except Exception as exc:
+        print(f"[WARN] Could not configure CarRacing render size: {exc}")
+        return
+
+    car_racing.VIDEO_W = int(TRAINING_CONFIG.get("render_width", 1000))
+    car_racing.VIDEO_H = int(TRAINING_CONFIG.get("render_height", 800))
+
+
 def make_env(env_id="CarRacing-v3", seed=42, rank=0):
     def _init():
+        configure_carracing_render_size()
         env = gym.make(
             env_id,
             render_mode=ENV_CONFIG.get("render_mode"),

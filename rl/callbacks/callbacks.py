@@ -10,7 +10,7 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 from stable_baselines3.common.callbacks import BaseCallback, CallbackList, CheckpointCallback
 
-from configs.config import GRAPHS_DIR, SCREENSHOTS_DIR, VIDEOS_DIR
+from configs.config import GRAPHS_DIR, SCREENSHOTS_DIR, TRAINING_CONFIG, VIDEOS_DIR
 
 
 class TrainingOutputCallback(BaseCallback):
@@ -19,6 +19,8 @@ class TrainingOutputCallback(BaseCallback):
         self.save_every = int(save_every)
         self.video_clip_frames = int(video_clip_frames)
         self.video_fps = int(video_fps)
+        self.media_width = int(TRAINING_CONFIG.get("media_width", 1920))
+        self.media_height = int(TRAINING_CONFIG.get("media_height", 1080))
         self.rewards = []
         self.timesteps = []
         self.frame_buffer = deque(maxlen=max(1, self.video_clip_frames))
@@ -119,7 +121,34 @@ class TrainingOutputCallback(BaseCallback):
                 frame = frame * 255.0
             frame = np.clip(frame, 0, 255).astype(np.uint8)
 
-        return frame
+        return self._to_hd_frame(frame)
+
+    def _to_hd_frame(self, frame):
+        target_width = max(1, self.media_width)
+        target_height = max(1, self.media_height)
+        height, width = frame.shape[:2]
+
+        if width == target_width and height == target_height:
+            return frame
+
+        scale = min(target_width / width, target_height / height)
+        resized_width = max(1, int(round(width * scale)))
+        resized_height = max(1, int(round(height * scale)))
+
+        resized = cv2.resize(
+            frame,
+            (resized_width, resized_height),
+            interpolation=cv2.INTER_LANCZOS4,
+        )
+
+        canvas = np.zeros((target_height, target_width, 3), dtype=np.uint8)
+        x_offset = (target_width - resized_width) // 2
+        y_offset = (target_height - resized_height) // 2
+        canvas[
+            y_offset : y_offset + resized_height,
+            x_offset : x_offset + resized_width,
+        ] = resized
+        return canvas
 
     def _save_outputs(self, step):
         self._save_reward_graph(step)
