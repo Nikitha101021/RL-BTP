@@ -111,6 +111,9 @@ def train(quick_test=False):
         save_freq=TRAINING_CONFIG.get("save_freq", 10000),
         graph_save_freq=TRAINING_CONFIG.get("graph_save_freq", 25000),
         model_prefix=model_name,
+        media_save_freq=TRAINING_CONFIG.get("media_save_freq", 20000),
+        video_clip_frames=TRAINING_CONFIG.get("video_clip_frames", 300),
+        video_fps=TRAINING_CONFIG.get("video_fps", 30),
     )
 
     requested_timesteps = (

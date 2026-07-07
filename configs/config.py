@@ -37,7 +37,7 @@ ENV_CONFIG = {
     "env_id": "CarRacing-v3",
     "num_agents": 1,
     "continuous": True,
-    "render_mode": None,
+    "render_mode": "rgb_array",
     "use_multi_agent": False,
 }
 
